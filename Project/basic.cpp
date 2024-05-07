@@ -1,18 +1,16 @@
-#include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
 #include <sys/resource.h>
 #include <sys/time.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstdlib>
-#include <string>
 #include <vector>
 #include <unordered_map>
 #include <iostream>
 #include <algorithm>
+
 using namespace std;
 
 // getrusage() is available in linux. Your code will be evaluated in Linux OS.
@@ -26,7 +24,7 @@ int Delta = 30;
 
 unordered_map<char, int> LetterToIndex;
 
-void DebufDP(int n1, int n2, std::vector<std::vector<int>> &dp, FILE *outputFile)
+void DebufDP(int n1, int n2, std::vector<std::vector<int> > &dp, FILE *outputFile)
 {
     for (int i = 0; i <= n1; ++i)
     {
@@ -38,7 +36,8 @@ void DebufDP(int n1, int n2, std::vector<std::vector<int>> &dp, FILE *outputFile
         cout << endl;
     }
 }
-void CalculateDP(std::vector<std::vector<int>> &dp, std::__cxx11::string &s1, std::__cxx11::string &s2)
+
+void CalculateDP(std::vector<std::vector<int> > &dp, std::string &s1, std::string &s2)
 {
     int n1 = s1.size(), n2 = s2.size();
     for (int i = 1; i <= n1; ++i)
@@ -60,7 +59,7 @@ void CalculateDP(std::vector<std::vector<int>> &dp, std::__cxx11::string &s1, st
     }
 }
 
-void Topdown(std::vector<std::vector<int>> &dp, std::__cxx11::string &s1, std::__cxx11::string &s2, std::__cxx11::string &res1, std::__cxx11::string &res2)
+void Topdown(std::vector<std::vector<int> > &dp, std::string &s1, std::string &s2, std::string &res1, std::string &res2)
 {
     int i = s1.size(), j = s2.size();
 
@@ -73,8 +72,6 @@ void Topdown(std::vector<std::vector<int>> &dp, std::__cxx11::string &s1, std::_
         int f1 = dp[i - 1][j - 1] + Alphas[a][b];
         int f2 = dp[i - 1][j] + Delta;
         int f3 = dp[i][j - 1] + Delta;
-
-        // if(f2 == f3 || f1 == f3 || f2 == f1)cout<<'1';
 
         if (cur == f1)
         {
@@ -141,7 +138,7 @@ std::vector<std::string> generateInputString(const string& url){
     std::vector<std::string> result;
 
     // open test case file
-    std::ifstream file("./SampleTestCases/input1.txt");
+    std::ifstream file(url);
 
     if (!file.is_open()) {
         std::cerr << "Failed to open the file." << std::endl;
@@ -151,32 +148,47 @@ std::vector<std::string> generateInputString(const string& url){
     // read file content and generate new string
     std::string S, T;
     std::getline(file, S);
-    std::cout << S << std::endl;
     std::string indexString;
     while (std::getline(file, indexString)) {
         if(isdigit(indexString[0])){
             int index = std::stoi(indexString);
             
             S = generateString(S, index);
-            std::cout << S << std::endl;
         }else{
             T = indexString;
-            std::cout << T << std::endl;
             break;
         }
     }
     while (std::getline(file, indexString)) {
         int index = std::stoi(indexString);
         T = generateString(T, index);
-        std::cout << T << std::endl;
     }
     file.close();
 
     result.push_back(S);
     result.push_back(T);
+    S.clear();
+    T.clear();
     return result;
 }
 
+void writeOutputFile(const string& url, const vector<string> &outputContent){
+    std::ofstream file(url);
+
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file!" << std::endl;
+        exit(0);
+    }
+
+    for (const auto& str : outputContent) {
+        file << str << std::endl;
+    }
+
+    file.close();
+}
+
+// ./SampleTestCases/input1.txt
+// ./myResult/output1.txt
 int main(int argc, char *argv[])
 {
     
@@ -191,54 +203,37 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    // input and output address
     const char *inputFilePath = argv[1];
     const char *outputFilePath = argv[2];
 
-    FILE *inputFile = fopen(inputFilePath, "r");
-    if (!inputFile)
-    {
-        perror("Failed to open input file");
-        return EXIT_FAILURE;
-    }
+    // generate input strings
+    std::vector<string> inputStrings = generateInputString(inputFilePath);
+    std::vector<string> outputContent;
 
-    FILE *outputFile = fopen(outputFilePath, "w");
-    if (!outputFile)
-    {
-        perror("Failed to open/create output file");
-        fclose(inputFile);
-        return EXIT_FAILURE;
-    }
-
-
+    // record running time and total memory
     struct timeval begin, end;
     gettimeofday(&begin, 0);
-    // write your solution here
 
-    std::string s1, s2;
-    int t = 0;
-    char buffer[2001];
-    while (fgets(buffer, sizeof(buffer), inputFile) != NULL)
-    {
-        if (t == 0)
-            s1 = buffer;
-        else
-            s2 = buffer;
-        t++;
-        fprintf(outputFile, s2.c_str());
-    }
-
+    std::string s1 = inputStrings[0], s2 = inputStrings[1];
     int n1 = s1.size(), n2 = s2.size();
     string res1 = "", res2 = "";
-    vector<vector<int>> dp(n1 + 1, vector<int>(n2 + 1, 0));
+    vector<vector<int> > dp(n1 + 1, vector<int>(n2 + 1, 0));
+
+    // calculate dp cost
     CalculateDP(dp, s1, s2);
-    cout << dp[n1][n2] << endl;
+    int cost = dp[n1][n2];
+    cout << "cost:" << cost << endl;
+    outputContent.push_back(std::to_string(cost));
     // DebufDP(n1, n2, dp, outputFile);
 
     Topdown(dp, s1, s2, res1, res2);
+    cout << "string1:" << res1 << endl;
+    cout << "string2:" << res2 << endl;
+    outputContent.push_back(res1);
+    outputContent.push_back(res2);
 
-    cout << res1 << res2 << endl;
-
-    // Please call getTotalMemory() only after calling your solution function. It calculates max memory used by the program.
+    // record running time and total memory
     double totalmemory = getTotalMemory();
     gettimeofday(&end, 0);
     long seconds = end.tv_sec - begin.tv_sec;
@@ -247,9 +242,11 @@ int main(int argc, char *argv[])
 
     printf("%f\n", totaltime);
     printf("%f\n", totalmemory);
+    outputContent.push_back(std::to_string(totaltime));
+    outputContent.push_back(std::to_string(totalmemory));
 
-    fclose(inputFile);
-    fclose(outputFile);
+    cout << outputContent.size() << endl;;
+    writeOutputFile(outputFilePath, outputContent);
 
     return EXIT_SUCCESS;
 }
