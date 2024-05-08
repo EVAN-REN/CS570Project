@@ -217,8 +217,8 @@ int main(int argc, char *argv[])
     gettimeofday(&begin, 0);
 
     std::string s1 = inputStrings[0], s2 = inputStrings[1];
-    cout << s1 << endl;
-    cout << s2 << endl;
+    std::cout << s1 << endl;
+    std::cout << s2 << endl;
     int n1 = s1.size(), n2 = s2.size();
     string res1 = "", res2 = "";
 
@@ -255,3 +255,5 @@ int main(int argc, char *argv[])
 
     return EXIT_SUCCESS;
 }
+
+
