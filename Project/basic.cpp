@@ -24,7 +24,7 @@ int Delta = 30;
 
 unordered_map<char, int> LetterToIndex;
 
-void DebufDP(int n1, int n2, std::vector<std::vector<int> > &dp, FILE *outputFile)
+void DebufDP(int n1, int n2, std::vector<std::vector<int>> &dp, FILE *outputFile)
 {
     for (int i = 0; i <= n1; ++i)
     {
@@ -37,7 +37,7 @@ void DebufDP(int n1, int n2, std::vector<std::vector<int> > &dp, FILE *outputFil
     }
 }
 
-void CalculateDP(std::vector<std::vector<int> > &dp, std::string &s1, std::string &s2)
+void CalculateDP(std::vector<std::vector<int>> &dp, std::string &s1, std::string &s2)
 {
     int n1 = s1.size(), n2 = s2.size();
     for (int i = 1; i <= n1; ++i)
@@ -59,7 +59,7 @@ void CalculateDP(std::vector<std::vector<int> > &dp, std::string &s1, std::strin
     }
 }
 
-void Topdown(std::vector<std::vector<int> > &dp, std::string &s1, std::string &s2, std::string &res1, std::string &res2)
+void Topdown(std::vector<std::vector<int>> &dp, std::string &s1, std::string &s2, std::string &res1, std::string &res2)
 {
     int i = s1.size(), j = s2.size();
 
@@ -105,7 +105,7 @@ void Topdown(std::vector<std::vector<int> > &dp, std::string &s1, std::string &s
         res2 += s2[j - 1];
         j--;
     }
-    cout << i << ' ' << j << endl;
+    // cout << i << ' ' << j << endl;
     reverse(res1.begin(), res1.end());
     reverse(res2.begin(), res2.end());
 }
@@ -127,20 +127,23 @@ long getTotalMemory()
 }
 
 // generate new string
-std::string generateString(const std::string& base, int index) {
+std::string generateString(const std::string &base, int index)
+{
     string result = base;
     result.insert(index + 1, base);
     return result;
 }
 
 // read and generate two input string from txt file
-std::vector<std::string> generateInputString(const string& url){
+std::vector<std::string> generateInputString(const string &url)
+{
     std::vector<std::string> result;
 
     // open test case file
     std::ifstream file(url);
 
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         std::cerr << "Failed to open the file." << std::endl;
         exit(0);
     }
@@ -151,18 +154,23 @@ std::vector<std::string> generateInputString(const string& url){
     std::getline(file, indexString);
     indexString.pop_back();
     S = indexString;
-    while (std::getline(file, indexString)) {
-        if(isdigit(indexString[0])){
+    while (std::getline(file, indexString))
+    {
+        if (isdigit(indexString[0]))
+        {
             int index = std::stoi(indexString);
-            
+
             S = generateString(S, index);
-        }else{
+        }
+        else
+        {
             indexString.pop_back();
             T = indexString;
             break;
         }
     }
-    while (std::getline(file, indexString)) {
+    while (std::getline(file, indexString))
+    {
         int index = std::stoi(indexString);
         T = generateString(T, index);
     }
@@ -173,15 +181,18 @@ std::vector<std::string> generateInputString(const string& url){
     return result;
 }
 
-void writeOutputFile(const string& url, const vector<string> &outputContent){
+void writeOutputFile(const string &url, const vector<string> &outputContent)
+{
     std::ofstream file(url);
 
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         std::cerr << "Failed to open file!" << std::endl;
         exit(0);
     }
 
-    for (const auto& str : outputContent) {
+    for (const auto &str : outputContent)
+    {
         file << str << std::endl;
     }
 
@@ -192,7 +203,7 @@ void writeOutputFile(const string& url, const vector<string> &outputContent){
 // ./myResult/output1.txt
 int main(int argc, char *argv[])
 {
-    
+
     LetterToIndex['A'] = 0;
     LetterToIndex['C'] = 1;
     LetterToIndex['G'] = 2;
@@ -217,13 +228,13 @@ int main(int argc, char *argv[])
     gettimeofday(&begin, 0);
 
     std::string s1 = inputStrings[0], s2 = inputStrings[1];
-    std::cout << s1 << endl;
-    std::cout << s2 << endl;
     int n1 = s1.size(), n2 = s2.size();
     string res1 = "", res2 = "";
 
-    cout<<"input:\n"<<s1<<endl<<s2<<endl;
-    vector<vector<int> > dp(n1 + 1, vector<int>(n2 + 1, 0));
+    cout << "input:\n"
+         << s1 << endl
+         << s2 << endl;
+    vector<vector<int>> dp(n1 + 1, vector<int>(n2 + 1, 0));
 
     // calculate dp cost
     CalculateDP(dp, s1, s2);
@@ -250,7 +261,7 @@ int main(int argc, char *argv[])
     outputContent.push_back(std::to_string(totaltime));
     outputContent.push_back(std::to_string(totalmemory));
 
-    cout << outputContent.size() << endl;;
+    cout << outputContent.size() << endl;
     writeOutputFile(outputFilePath, outputContent);
 
     return EXIT_SUCCESS;
