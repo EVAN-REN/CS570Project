@@ -128,7 +128,7 @@ long getTotalMemory()
 
 // generate new string
 std::string generateString(const std::string& base, int index) {
-    std::string result = base;
+    string result = base;
     result.insert(index + 1, base);
     return result;
 }
@@ -147,14 +147,17 @@ std::vector<std::string> generateInputString(const string& url){
 
     // read file content and generate new string
     std::string S, T;
-    std::getline(file, S);
     std::string indexString;
+    std::getline(file, indexString);
+    indexString.pop_back();
+    S = indexString;
     while (std::getline(file, indexString)) {
         if(isdigit(indexString[0])){
             int index = std::stoi(indexString);
             
             S = generateString(S, index);
         }else{
+            indexString.pop_back();
             T = indexString;
             break;
         }
@@ -167,8 +170,6 @@ std::vector<std::string> generateInputString(const string& url){
 
     result.push_back(S);
     result.push_back(T);
-    S.clear();
-    T.clear();
     return result;
 }
 
@@ -216,6 +217,8 @@ int main(int argc, char *argv[])
     gettimeofday(&begin, 0);
 
     std::string s1 = inputStrings[0], s2 = inputStrings[1];
+    cout << s1 << endl;
+    cout << s2 << endl;
     int n1 = s1.size(), n2 = s2.size();
     string res1 = "", res2 = "";
     vector<vector<int> > dp(n1 + 1, vector<int>(n2 + 1, 0));
