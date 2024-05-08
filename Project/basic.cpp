@@ -218,6 +218,8 @@ int main(int argc, char *argv[])
     std::string s1 = inputStrings[0], s2 = inputStrings[1];
     int n1 = s1.size(), n2 = s2.size();
     string res1 = "", res2 = "";
+
+    cout<<"input:\n"<<s1<<endl<<s2<<endl;
     vector<vector<int> > dp(n1 + 1, vector<int>(n2 + 1, 0));
 
     // calculate dp cost
@@ -240,8 +242,8 @@ int main(int argc, char *argv[])
     long microseconds = end.tv_usec - begin.tv_usec;
     double totaltime = seconds * 1000 + microseconds * 1e-3;
 
-    printf("%f\n", totaltime);
-    printf("%f\n", totalmemory);
+    printf("Time used: %f\n", totaltime);
+    printf("Memory used: %f\n", totalmemory);
     outputContent.push_back(std::to_string(totaltime));
     outputContent.push_back(std::to_string(totalmemory));
 
