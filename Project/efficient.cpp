@@ -266,7 +266,8 @@ void memoryEfficient(string s1, string s2, string &output1, string &output2, int
         totalDP[j] = front[j] + back[n2 - j];
     }
     int cut = distance(totalDP.begin(), min_element(totalDP.begin(), totalDP.end()));
-
+    front.clear();
+    back.clear();
     string lo1 = "", lo2 = "";
     string ro1 = "", ro2 = "";
     memoryEfficient(s1.substr(0, n1 / 2), s2.substr(0, cut), lo1, lo2, cost);
