@@ -152,7 +152,7 @@ std::vector<std::string> generateInputString(const string &url)
     std::string S, T;
     std::string indexString;
     std::getline(file, indexString);
-    indexString.pop_back();
+    
     S = indexString;
     while (std::getline(file, indexString))
     {
@@ -164,7 +164,7 @@ std::vector<std::string> generateInputString(const string &url)
         }
         else
         {
-            indexString.pop_back();
+            
             T = indexString;
             break;
         }
