@@ -201,29 +201,31 @@ vector<int> halfDP(const string &s1, const string &s2, bool ifForwards){
     vector<int> currDp(n2 + 1, 0);
     vector<int> prevDp(n2 + 1, 0);
 
-    for (int j = 0; j <= n2; ++j) {
-        currDp[j] = j * Delta; // 初始化当前行
-    }
-    
+    for (int j = 1; j <= n2; ++j)
+        prevDp[j] = j * Delta;
+    for (int i = 1; i <= n1; ++i)
+    {
+        for (int j = 1; j <= n2; ++j)
+        {
+            currDp[0] = i * Delta;
+            int a = 0;
+            int b = 0;
+            if(ifForwards){
+                a = LetterToIndex[s1[i - 1]];
+                b = LetterToIndex[s2[j - 1]];
+            }else{
+                a = LetterToIndex[s1[n1 - i]];
+                b = LetterToIndex[s2[n2 - j]];
+            }   
 
-    for (int i = 1; i <= n1; ++i) {
-        for (int j = 0; j <= n2; ++j) {
-            if (j == 0) {
-                currDp[j] = i * Delta; 
-            } else {
-                int a = LetterToIndex[s1[ifForwards ? (i - 1) : (n1 - i)]];
-                int b = LetterToIndex[s2[j - 1]];
-
-                int f1 = prevDp[j - 1] + Alphas[a][b];
-                int f2 = prevDp[j] + Delta;
-                int f3 = currDp[j - 1] + Delta;
-                currDp[j] = min(f1, min(f2, f3));
-            }
+            int f1 = prevDp[j - 1] + Alphas[a][b];
+            int f2 = prevDp[j] + Delta;
+            int f3 = currDp[j - 1] + Delta;
+            currDp[j] = min(f1, min(f2, f3));
         }
-        swap(currDp, prevDp); 
+        prevDp = currDp;
     }
-
-    return prevDp; 
+    return prevDp;
 }
 
 void memoryEfficient(string s1, string s2, string &output1, string &output2, int &cost){
