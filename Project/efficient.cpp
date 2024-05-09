@@ -197,14 +197,14 @@ void writeOutputFile(const string &url, const vector<string> &outputContent)
 }
 
 vector<int> halfDP(const string &s1, const string &s2, bool ifForwards){
-    if(ifForwards){
-        int n1 = s1.size(), n2 = s2.size();
-        vector<int> currDp(n2 + 1, 0);
-        vector<int> prevDp(n2 + 1, 0);
+    int n1 = s1.size(), n2 = s2.size();
+    vector<int> currDp(n2 + 1, 0);
+    vector<int> prevDp(n2 + 1, 0);
 
-        for (int j = 0; j <= n2; ++j) {
+    for (int j = 0; j <= n2; ++j) {
         currDp[j] = j * Delta; // 初始化当前行
     }
+    
 
     for (int i = 1; i <= n1; ++i) {
         for (int j = 0; j <= n2; ++j) {
