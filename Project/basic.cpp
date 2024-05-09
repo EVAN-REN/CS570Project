@@ -24,19 +24,6 @@ int Delta = 30;
 
 unordered_map<char, int> LetterToIndex;
 
-void DebufDP(int n1, int n2, std::vector<std::vector<int>> &dp, FILE *outputFile)
-{
-    for (int i = 0; i <= n1; ++i)
-    {
-        for (int j = 0; j <= n2; ++j)
-        {
-            cout << dp[i][j] << ' ';
-            fprintf(outputFile, "%d ", dp[i][j]);
-        }
-        cout << endl;
-    }
-}
-
 void CalculateDP(std::vector<std::vector<int>> &dp, std::string &s1, std::string &s2)
 {
     int n1 = s1.size(), n2 = s2.size();
@@ -199,8 +186,6 @@ void writeOutputFile(const string &url, const vector<string> &outputContent)
     file.close();
 }
 
-// ./SampleTestCases/input1.txt
-// ./myResult/output1.txt
 int main(int argc, char *argv[])
 {
 
@@ -240,7 +225,6 @@ int main(int argc, char *argv[])
     CalculateDP(dp, s1, s2);
     int cost = dp[n1][n2];
     outputContent.push_back(std::to_string(cost));
-    // DebufDP(n1, n2, dp, outputFile);
 
     Topdown(dp, s1, s2, res1, res2);
     // cout << "string1:" << res1 << endl;
