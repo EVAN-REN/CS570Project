@@ -152,19 +152,16 @@ std::vector<std::string> generateInputString(const string &url)
     std::string S, T;
     std::string indexString;
     std::getline(file, indexString);
-    indexString.pop_back();
     S = indexString;
     while (std::getline(file, indexString))
     {
         if (isdigit(indexString[0]))
         {
             int index = std::stoi(indexString);
-
             S = generateString(S, index);
         }
         else
         {
-            indexString.pop_back();
             T = indexString;
             break;
         }
