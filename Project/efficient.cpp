@@ -199,6 +199,82 @@ void writeOutputFile(const string &url, const vector<string> &outputContent)
     file.close();
 }
 
+vector<int> halfDP(const string &s1, const string &s2, bool ifForwards){
+    if(ifForwards){
+        int n1 = s1.size(), n2 = s2.size();
+        vector<vector<int>> halfDpCost(n1 + 1, vector<int>(n2 + 1, 0));
+
+        for (int i = 1; i <= n1; ++i)
+            halfDpCost[i][0] = i * Delta;
+        for (int j = 1; j <= n2; ++j)
+            halfDpCost[0][j] = j * Delta;
+        for (int i = 1; i <= n1; ++i)
+        {
+            for (int j = 1; j <= n2; ++j)
+            {
+                int a = LetterToIndex[s1[i - 1]];
+                int b = LetterToIndex[s2[j - 1]];
+
+                int f1 = halfDpCost[i - 1][j - 1] + Alphas[a][b];
+                int f2 = halfDpCost[i - 1][j] + Delta;
+                int f3 = halfDpCost[i][j - 1] + Delta;
+                halfDpCost[i][j] = min(f1, min(f2, f3));
+            }
+        }
+        return halfDpCost[n1];
+    }else{
+        int n1 = s1.size(), n2 = s2.size();
+        vector<vector<int>> halfDpCost(n1 + 1, vector<int>(n2 + 1, 0));
+
+        for (int i = 1; i <= n1; ++i)
+            halfDpCost[i][0] = i * Delta;
+        for (int j = 1; j <= n2; ++j)
+            halfDpCost[0][j] = j * Delta;
+        for (int i = 1; i <= n1; ++i)
+        {
+            for (int j = 1; j <= n2; ++j)
+            {
+                int a = LetterToIndex[s1[n1 - i]];
+                int b = LetterToIndex[s2[n2 - j]];
+
+                int f1 = halfDpCost[i - 1][j - 1] + Alphas[a][b];
+                int f2 = halfDpCost[i - 1][j] + Delta;
+                int f3 = halfDpCost[i][j - 1] + Delta;
+                halfDpCost[i][j] = min(f1, min(f2, f3));
+            }
+        }
+        return halfDpCost[n1];
+    }
+}
+
+void memoryEfficient(string s1, string s2, string &output1, string &output2, int &cost){
+    int n1 = s1.size(), n2 = s2.size();
+    if(n1 < 2 || n2 < 2){
+        std::vector<std::vector<int>> dp(n1 + 1, vector<int>(n2 + 1, 0));
+        CalculateDP(dp, s1, s2);
+        cost += dp[n1][n2];
+        Topdown(dp, s1, s2, output1, output2);
+        return;
+    }
+
+    int middle = n1 / 2;
+    auto front = halfDP(s1.substr(0, middle), s2, true);
+    auto back = halfDP(s1.substr(middle), s2, false);
+
+    vector<int> totalDP(n2 + 1, 0);
+    for(int j = 0; j <= n2; ++j){
+        totalDP[j] = front[j] + back[n2 - j];
+    }
+    int cut = distance(totalDP.begin(), min_element(totalDP.begin(), totalDP.end()));
+
+    string lo1 = "", lo2 = "";
+    string ro1 = "", ro2 = "";
+    memoryEfficient(s1.substr(0, n1 / 2), s2.substr(0, cut), lo1, lo2, cost);
+    memoryEfficient(s1.substr(n1 / 2), s2.substr(cut), ro1, ro2, cost);
+    output1 = lo1 + ro1;
+    output2 = lo2 + ro2;
+}
+
 // ./SampleTestCases/input1.txt
 // ./myResult/output1.txt
 int main(int argc, char *argv[])
@@ -228,24 +304,20 @@ int main(int argc, char *argv[])
     gettimeofday(&begin, 0);
 
     std::string s1 = inputStrings[0], s2 = inputStrings[1];
-    // cout << s1 << endl;
-    // cout << s2 << endl;
     int n1 = s1.size(), n2 = s2.size();
     string res1 = "", res2 = "";
 
     cout << "input:\n"
          << s1 << endl
          << s2 << endl;
-    vector<vector<int>> dp(n1 + 1, vector<int>(n2 + 1, 0));
-
-    // calculate dp cost
-    CalculateDP(dp, s1, s2);
-    int cost = dp[n1][n2];
+    
+    
+    int cost = 0;
+    memoryEfficient(s1, s2, res1, res2, cost);
     cout << "cost:" << cost << endl;
     outputContent.push_back(std::to_string(cost));
     // DebufDP(n1, n2, dp, outputFile);
 
-    Topdown(dp, s1, s2, res1, res2);
     cout << "string1:" << res1 << endl;
     cout << "string2:" << res2 << endl;
     outputContent.push_back(res1);
