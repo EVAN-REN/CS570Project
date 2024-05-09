@@ -317,7 +317,6 @@ int main(int argc, char *argv[])
     outputContent.push_back(std::to_string(totaltime));
     outputContent.push_back(std::to_string(totalmemory));
 
-    cout << outputContent.size() << endl;
     writeOutputFile(outputFilePath, outputContent);
 
     return EXIT_SUCCESS;

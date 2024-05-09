@@ -262,6 +262,7 @@ int main(int argc, char *argv[])
     outputContent.push_back(std::to_string(totalmemory));
 
     // cout << outputContent.size() << endl;
+    cout << "size: " << n1 + n2 << endl;
     writeOutputFile(outputFilePath, outputContent);
 
     return EXIT_SUCCESS;
