@@ -197,51 +197,33 @@ void writeOutputFile(const string &url, const vector<string> &outputContent)
 }
 
 vector<int> halfDP(const string &s1, const string &s2, bool ifForwards){
-    if(ifForwards){
-        int n1 = s1.size(), n2 = s2.size();
-        vector<vector<int>> halfDpCost(n1 + 1, vector<int>(n2 + 1, 0));
+    int n1 = s1.size(), n2 = s2.size();
+    vector<int> currDp(n2 + 1, 0);
+    vector<int> prevDp(n2 + 1, 0);
 
-        for (int i = 1; i <= n1; ++i)
-            halfDpCost[i][0] = i * Delta;
-        for (int j = 1; j <= n2; ++j)
-            halfDpCost[0][j] = j * Delta;
-        for (int i = 1; i <= n1; ++i)
-        {
-            for (int j = 1; j <= n2; ++j)
-            {
-                int a = LetterToIndex[s1[i - 1]];
+    for (int j = 0; j <= n2; ++j) {
+        currDp[j] = j * Delta; // 初始化当前行
+    }
+    
+
+    for (int i = 1; i <= n1; ++i) {
+        for (int j = 0; j <= n2; ++j) {
+            if (j == 0) {
+                currDp[j] = i * Delta; 
+            } else {
+                int a = LetterToIndex[s1[ifForwards ? (i - 1) : (n1 - i)]];
                 int b = LetterToIndex[s2[j - 1]];
 
-                int f1 = halfDpCost[i - 1][j - 1] + Alphas[a][b];
-                int f2 = halfDpCost[i - 1][j] + Delta;
-                int f3 = halfDpCost[i][j - 1] + Delta;
-                halfDpCost[i][j] = min(f1, min(f2, f3));
+                int f1 = prevDp[j - 1] + Alphas[a][b];
+                int f2 = prevDp[j] + Delta;
+                int f3 = currDp[j - 1] + Delta;
+                currDp[j] = min(f1, min(f2, f3));
             }
         }
-        return halfDpCost[n1];
-    }else{
-        int n1 = s1.size(), n2 = s2.size();
-        vector<vector<int>> halfDpCost(n1 + 1, vector<int>(n2 + 1, 0));
-
-        for (int i = 1; i <= n1; ++i)
-            halfDpCost[i][0] = i * Delta;
-        for (int j = 1; j <= n2; ++j)
-            halfDpCost[0][j] = j * Delta;
-        for (int i = 1; i <= n1; ++i)
-        {
-            for (int j = 1; j <= n2; ++j)
-            {
-                int a = LetterToIndex[s1[n1 - i]];
-                int b = LetterToIndex[s2[n2 - j]];
-
-                int f1 = halfDpCost[i - 1][j - 1] + Alphas[a][b];
-                int f2 = halfDpCost[i - 1][j] + Delta;
-                int f3 = halfDpCost[i][j - 1] + Delta;
-                halfDpCost[i][j] = min(f1, min(f2, f3));
-            }
-        }
-        return halfDpCost[n1];
+        swap(currDp, prevDp); 
     }
+
+    return prevDp; 
 }
 
 void memoryEfficient(string s1, string s2, string &output1, string &output2, int &cost){
