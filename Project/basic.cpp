@@ -231,27 +231,27 @@ int main(int argc, char *argv[])
     int n1 = s1.size(), n2 = s2.size();
     string res1 = "", res2 = "";
 
-    cout << "input:\n"
-         << s1 << endl
-         << s2 << endl;
+    // cout << "input:\n"
+    //      << s1 << endl
+    //      << s2 << endl;
     vector<vector<int>> dp(n1 + 1, vector<int>(n2 + 1, 0));
 
     // calculate dp cost
     CalculateDP(dp, s1, s2);
     int cost = dp[n1][n2];
-    cout << "cost:" << cost << endl;
     outputContent.push_back(std::to_string(cost));
     // DebufDP(n1, n2, dp, outputFile);
 
     Topdown(dp, s1, s2, res1, res2);
-    cout << "string1:" << res1 << endl;
-    cout << "string2:" << res2 << endl;
+    // cout << "string1:" << res1 << endl;
+    // cout << "string2:" << res2 << endl;
     outputContent.push_back(res1);
     outputContent.push_back(res2);
 
     // record running time and total memory
     double totalmemory = getTotalMemory();
     gettimeofday(&end, 0);
+    cout << "cost:" << cost << endl;
     long seconds = end.tv_sec - begin.tv_sec;
     long microseconds = end.tv_usec - begin.tv_usec;
     double totaltime = seconds * 1000 + microseconds * 1e-3;
@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
     outputContent.push_back(std::to_string(totaltime));
     outputContent.push_back(std::to_string(totalmemory));
 
-    cout << outputContent.size() << endl;
+    // cout << outputContent.size() << endl;
     writeOutputFile(outputFilePath, outputContent);
 
     return EXIT_SUCCESS;

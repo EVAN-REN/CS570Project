@@ -305,25 +305,25 @@ int main(int argc, char *argv[])
     int n1 = s1.size(), n2 = s2.size();
     string res1 = "", res2 = "";
 
-    cout << "input:\n"
-         << s1 << endl
-         << s2 << endl;
+    // cout << "input:\n"
+    //      << s1 << endl
+    //      << s2 << endl;
     
     
     int cost = 0;
     memoryEfficient(s1, s2, res1, res2, cost);
-    cout << "cost:" << cost << endl;
     outputContent.push_back(std::to_string(cost));
     // DebufDP(n1, n2, dp, outputFile);
 
-    cout << "string1:" << res1 << endl;
-    cout << "string2:" << res2 << endl;
+    // cout << "string1:" << res1 << endl;
+    // cout << "string2:" << res2 << endl;
     outputContent.push_back(res1);
     outputContent.push_back(res2);
 
     // record running time and total memory
     double totalmemory = getTotalMemory();
     gettimeofday(&end, 0);
+    cout << "cost:" << cost << endl;
     long seconds = end.tv_sec - begin.tv_sec;
     long microseconds = end.tv_usec - begin.tv_usec;
     double totaltime = seconds * 1000 + microseconds * 1e-3;
